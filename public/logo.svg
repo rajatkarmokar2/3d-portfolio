@@ -1,0 +1,15 @@
+<svg width="611" height="605" viewBox="0 0 611 605" fill="none" xmlns="http://www.w3.org/2000/svg">
+   <path
+      d="M227 451C227 424.5 227 209.5 227 209.5C296.5 209.5 424 185 424 271.5C424 343 361.5 343.5 338.5 343.5L450 520.5C314 633.5 35.5003 548 35.5002 290C35.5002 130.999 166.5 35 311 35C455.5 35 575.5 169 575.5 290C575.5 411 522 461.5 508.5 470"
+      stroke="#FF0000" stroke-width="70" fill="none" stroke-dasharray="calc(2400*1)" stroke-dashoffset="0"
+      class="animated-logo">
+      <animate attributeName="stroke-dashoffset" from="0" to="calc(2400*2)" dur="10s" 
+      />
+      <!-- repeatCount="indefinite"  -->
+      <!-- <animate attributeName="stroke" values="#FF0000; #00FF00; #0000FF; #FF0000" dur="4s" repeatCount="indefinite" /> -->
+   </path>
+   <!-- <path
+      d="M227 451C227 424.5 227 209.5 227 209.5C296.5 209.5 424 185 424 271.5C424 343 361.5 343.5 338.5 343.5L450 520.5C314 633.5 35.5003 548 35.5002 290C35.5002 130.999 166.5 35 311 35C455.5 35 575.5 169 575.5 290C575.5 411 522 461.5 508.5 470"
+      stroke="#FF0000" stroke-width="70" fill="none" stroke-dasharray="1000" stroke-dashoffset="1000">
+   </path> -->
+</svg>
