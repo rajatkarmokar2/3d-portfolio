@@ -1,24 +1,35 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Preload, useGLTF } from "@react-three/drei";
+import { Environment, OrbitControls, Preload, useGLTF } from "@react-three/drei";
 
 import CanvasLoader from "../Loader";
 
 const Computers = ({ isMobile }) => {
-  const computer = useGLTF("./desktop_pc/scene.gltf"); 
+  const computer = useGLTF("./desktop_pc/scene.gltf");
 
   return (
     <mesh>
-      <hemisphereLight intensity={0.15} groundColor='black' />
+      {/* General ambient light for overall illumination */}
+      <ambientLight intensity={0.3} />
+
+      {/* Hemisphere light for natural diffused light */}
+      <hemisphereLight intensity={0.35} skyColor="white" groundColor="black" />
+
+      {/* Spotlight for dramatic lighting */}
       <spotLight
         position={[-20, 50, 10]}
-        angle={0.12}
-        penumbra={1}
-        intensity={1}
+        angle={0.3} // Wider angle for more coverage
+        penumbra={0.5} // Softer edges for realistic shadows
+        intensity={1.2} // Slightly increased intensity
         castShadow
-        shadow-mapSize={1024}
+        shadow-mapSize-width={2048} // High-resolution shadows
+        shadow-mapSize-height={2048}
       />
-      <pointLight intensity={1} />
+
+      {/* Point light for highlighting model details */}
+      <pointLight position={[10, 10, 10]} intensity={1.5} />
+
+      {/* Model */}
       <primitive
         object={computer.scene}
         scale={isMobile ? 0.7 : 0.75}
@@ -68,6 +79,7 @@ const ComputersCanvas = () => {
           minPolarAngle={Math.PI / 2}
         />
         <Computers isMobile={isMobile} />
+        <Environment preset="city" />
       </Suspense>
 
       <Preload all />
