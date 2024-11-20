@@ -1,90 +1,74 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React,{ Suspense,useEffect,useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Environment, OrbitControls, Preload, useGLTF } from "@react-three/drei";
-
+import { Environment,Html,OrbitControls,Preload,useGLTF } from "@react-three/drei";
 import CanvasLoader from "../Loader";
 
-const Computers = ({ isMobile }) => {
-  const computer = useGLTF("./desktop_pc/scene.gltf");
+const Computers = ( { isMobile } ) => {
+  const computer = useGLTF( "/computer.glb" );
 
   return (
     <mesh>
-      {/* General ambient light for overall illumination */}
-      <ambientLight intensity={0.3} />
-
-      {/* Hemisphere light for natural diffused light */}
-      <hemisphereLight intensity={0.35} skyColor="white" groundColor="black" />
-
-      {/* Spotlight for dramatic lighting */}
+      <ambientLight intensity={ 0.4 } />
+      <hemisphereLight intensity={ 0.5 } skyColor="white" groundColor="black" />
       <spotLight
-        position={[-20, 50, 10]}
-        angle={0.3} // Wider angle for more coverage
-        penumbra={0.5} // Softer edges for realistic shadows
-        intensity={1.2} // Slightly increased intensity
+        position={ [ -20,50,10 ] }
+        angle={ 0.4 } // Wider coverage
+        penumbra={ 0.5 }
+        intensity={ 1.5 } // Increased intensity
         castShadow
-        shadow-mapSize-width={2048} // High-resolution shadows
-        shadow-mapSize-height={2048}
+        shadow-mapSize-width={ 1024 }
+        shadow-mapSize-height={ 1024 }
       />
-
-      {/* Point light for highlighting model details */}
-      <pointLight position={[10, 10, 10]} intensity={1.5} />
-
-      {/* Model */}
+      <pointLight position={ [ 10,10,10 ] } intensity={ 1.5 } />
+      {/* Model */ }
       <primitive
-        object={computer.scene}
-        scale={isMobile ? 0.7 : 0.75}
-        position={isMobile ? [0, -3, -2.2] : [0, -3.25, -1.5]}
-        rotation={[-0.01, -0.2, -0.1]}
+        object={ computer.scene }
+        scale={ isMobile ? 0.7 : 0.75 }
+        position={ isMobile ? [ 0,-3,-2.2 ] : [ 0,-3.25,-1.5 ] }
+        rotation={ [ -0.01,-0.2,-0.1 ] }
       />
     </mesh>
   );
 };
 
 const ComputersCanvas = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    // Add a listener for changes to the screen size
-    const mediaQuery = window.matchMedia("(max-width: 500px)");
-
-    // Set the initial value of the `isMobile` state variable
-    setIsMobile(mediaQuery.matches);
-
-    // Define a callback function to handle changes to the media query
-    const handleMediaQueryChange = (event) => {
-      setIsMobile(event.matches);
-    };
-
-    // Add the callback function as a listener for changes to the media query
-    mediaQuery.addEventListener("change", handleMediaQueryChange);
-
-    // Remove the listener when the component is unmounted
-    return () => {
-      mediaQuery.removeEventListener("change", handleMediaQueryChange);
-    };
-  }, []);
+  const isMobile = useIsMobile();
 
   return (
     <Canvas
-      frameloop='demand'
+      frameloop="demand"
       shadows
-      dpr={[1, 2]}
-      camera={{ position: [20, 3, 5], fov: 25 }}
-      gl={{ preserveDrawingBuffer: true }}
+      dpr={ [ 1,1.5 ] } // Reduce max DPR for better mobile performance
+      camera={ { position: [ 20,3,5 ],fov: 25 } }
+      gl={ { antialias: true,preserveDrawingBuffer: true } }
     >
-      <Suspense fallback={<CanvasLoader />}>
+      <Suspense fallback={ <CanvasLoader /> }>
         <OrbitControls
-          enableZoom={false}
-          maxPolarAngle={Math.PI / 2}
-          minPolarAngle={Math.PI / 2}
+          enableZoom={ false }
+          maxPolarAngle={ Math.PI / 2 }
+          minPolarAngle={ Math.PI / 2 }
         />
-        <Computers isMobile={isMobile} />
-        <Environment preset="city" />
+        <Computers isMobile={ isMobile } />
+        <Environment preset="studio" />
+        <Preload all />
       </Suspense>
 
-      <Preload all />
     </Canvas>
   );
 };
 
 export default ComputersCanvas;
+
+
+const useIsMobile = () => {
+  const [ isMobile,setIsMobile ] = useState( false );
+
+  useEffect( () => {
+    const handleResize = () => setIsMobile( window.innerWidth <= 768 );
+    window.addEventListener( "resize",handleResize );
+    handleResize(); // Initial check
+    return () => window.removeEventListener( "resize",handleResize );
+  },[] );
+
+  return isMobile;
+};
